@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
+import CommunityDetails from './CommunityDetails';
 
 const initialForm = {
   name: '',
@@ -25,6 +27,7 @@ const onboardingOptions = ['Setup Required', 'Data Import', 'Staff Training', 'L
 
 const CommunityManager: React.FC = () => {
   const [communities, setCommunities] = useState<any[]>([]);
+  const [detailsId, setDetailsId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -98,6 +101,10 @@ const CommunityManager: React.FC = () => {
     setLoading(false);
   };
 
+  if (detailsId) {
+    return <CommunityDetails id={detailsId} onBack={() => setDetailsId(null)} />;
+  }
+
   return (
     <div>
       <h3>Communities</h3>
@@ -124,6 +131,7 @@ const CommunityManager: React.FC = () => {
               <td>{c.status}</td>
               <td>{c.onboarding_status}</td>
               <td>
+                <Button size="sm" variant="info" className="me-2" onClick={() => setDetailsId(c.id)}>Details</Button>
                 <Button size="sm" variant="secondary" onClick={() => handleShowForm(c)} className="me-2">Update</Button>
                 <Button size="sm" variant="danger" onClick={() => { setShowDelete(true); setDeleteId(c.id); }}>Delete</Button>
               </td>
