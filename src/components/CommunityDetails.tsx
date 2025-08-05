@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
+import UnitManager from './UnitManager';
 
 interface CommunityDetailsProps {
   id: string;
@@ -60,7 +62,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
           </Row>
         </Card.Body>
       </Card>
-      {/* Units UI will be added here in the future */}
+      <UnitManager communityId={community.id} />
     </div>
   );
 };
