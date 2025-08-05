@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Row, Col, Card, Spinner, Alert, Table } from 'react-bootstrap';
+import { Button, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
 
 interface CommunityDetailsProps {
@@ -9,7 +9,7 @@ interface CommunityDetailsProps {
 
 const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
   const [community, setCommunity] = useState<any>(null);
-  const [units, setUnits] = useState<any[]>([]);
+  // const [units, setUnits] = useState<any[]>([]); // For future unit UI
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,10 +20,10 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
       const { data, error } = await supabase.from('community').select('*').eq('id', id).single();
       if (error) setError(error.message);
       else setCommunity(data);
-      // Fetch units for this community
-      const { data: unitData, error: unitError } = await supabase.from('unit').select('*').eq('community_id', id);
-      if (unitError) setError(unitError.message);
-      else setUnits(unitData || []);
+      // Units fetch is commented out until the unit table/UI is ready
+      // const { data: unitData, error: unitError } = await supabase.from('unit').select('*').eq('community_id', id);
+      // if (unitError) setError(unitError.message);
+      // else setUnits(unitData || []);
       setLoading(false);
     };
     fetchDetails();
@@ -60,26 +60,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
           </Row>
         </Card.Body>
       </Card>
-      <h5>Units</h5>
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>Unit Number</th>
-            <th>Created</th>
-            <th>Modified</th>
-          </tr>
-        </thead>
-        <tbody>
-          {units.map((u) => (
-            <tr key={u.id}>
-              <td>{u.unit_number}</td>
-              <td>{u.created_datetime}</td>
-              <td>{u.modified_datetime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      {/* Add unit management UI here in the future */}
+      {/* Units UI will be added here in the future */}
     </div>
   );
 };
