@@ -63,11 +63,16 @@ const ClientManager: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    // Set subscription_plan_id to null if empty string
+    const submitForm = {
+      ...form,
+      subscription_plan_id: form.subscription_plan_id === '' ? null : form.subscription_plan_id
+    };
     if (editingId) {
-      const { error } = await supabase.from('client').update(form).eq('id', editingId);
+      const { error } = await supabase.from('client').update(submitForm).eq('id', editingId);
       if (error) setError(error.message);
     } else {
-      const { error } = await supabase.from('client').insert([form]);
+      const { error } = await supabase.from('client').insert([submitForm]);
       if (error) setError(error.message);
     }
     setShowForm(false);
