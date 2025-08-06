@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
 import UnitManager from './UnitManager';
+import ResidentManager from './ResidentManager';
 // ...existing code...
 
 interface CommunityDetailsProps {
@@ -44,8 +45,6 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowR
       onShowResidents(community.id, community.name);
       return null;
     } else {
-      // Lazy load ResidentManager to avoid circular imports
-      const ResidentManager = require('./ResidentManager').default;
       return <ResidentManager communityId={community.id} communityName={community.name} onShowResidentDetails={() => {}} />;
     }
   }
