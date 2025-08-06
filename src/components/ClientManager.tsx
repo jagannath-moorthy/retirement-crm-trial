@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
+import CommunityDetails from './CommunityDetails';
 
 const initialForm = {
   name: '',
@@ -94,9 +95,25 @@ const ClientManager: React.FC = () => {
     setLoading(false);
   };
 
-  // Details modal for now just shows all fields
+  // Show communities for the selected client
+  const [clientCommunities, setClientCommunities] = useState<any[]>([]);
+  useEffect(() => {
+    if (detailsId) {
+      supabase
+        .from('community')
+        .select('id, name')
+        .eq('client_id', detailsId)
+        .order('name')
+        .then(({ data }) => setClientCommunities(data || []));
+    } else {
+      setClientCommunities([]);
+    }
+  }, [detailsId]);
+
+  const [showCommunityDetailsId, setShowCommunityDetailsId] = useState<string | null>(null);
+
   const ClientDetailsModal = ({ client, onHide }: { client: any, onHide: () => void }) => (
-    <Modal show={!!client} onHide={onHide}>
+    <Modal show={!!client} onHide={onHide} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>Client Details</Modal.Title>
       </Modal.Header>
@@ -106,6 +123,28 @@ const ClientManager: React.FC = () => {
             {Object.entries(client).map(([k, v]) => (
               <div key={k}><strong>{k}:</strong> {String(v)}</div>
             ))}
+            <hr />
+            <h5>Communities Owned</h5>
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {clientCommunities.length === 0 ? (
+                  <tr><td>No communities found for this client.</td></tr>
+                ) : (
+                  clientCommunities.map(comm => (
+                    <tr key={comm.id}>
+                      <td>
+                        <Button variant="link" onClick={() => setShowCommunityDetailsId(comm.id)}>{comm.name}</Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
           </div>
         )}
       </Modal.Body>
@@ -114,6 +153,9 @@ const ClientManager: React.FC = () => {
       </Modal.Footer>
     </Modal>
   );
+
+  // Show community details modal if a community is selected
+  // ...existing code...
 
   return (
     <div>
@@ -213,6 +255,24 @@ const ClientManager: React.FC = () => {
 
       {/* Details Modal */}
       <ClientDetailsModal client={clients.find(c => c.id === detailsId)} onHide={() => setDetailsId(null)} />
+      {showCommunityDetailsId && (
+        <Modal show={true} onHide={() => setShowCommunityDetailsId(null)} size="lg">
+          <Modal.Header closeButton>
+            <Modal.Title>Community Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {/* Render CommunityDetails component for selected community */}
+            <div>
+              <Button variant="secondary" className="mb-3" onClick={() => setShowCommunityDetailsId(null)}>
+                Back to Client
+              </Button>
+              <div>
+                <CommunityDetails id={showCommunityDetailsId} onBack={() => setShowCommunityDetailsId(null)} />
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 };
