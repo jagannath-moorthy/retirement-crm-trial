@@ -3,13 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
 import UnitManager from './UnitManager';
+// ...existing code...
 
 interface CommunityDetailsProps {
   id: string;
   onBack: () => void;
+  onShowResidents?: (communityId: string, communityName: string) => void;
 }
 
-const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
+const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowResidents }) => {
+  const [showResidents, setShowResidents] = useState(false);
+  // ...existing code...
   const [community, setCommunity] = useState<any>(null);
   // const [units, setUnits] = useState<any[]>([]); // For future unit UI
   const [loading, setLoading] = useState(true);
@@ -34,6 +38,17 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
   if (loading) return <Spinner animation="border" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
   if (!community) return <Alert variant="warning">Community not found.</Alert>;
+
+  if (showResidents) {
+    if (typeof onShowResidents === 'function') {
+      onShowResidents(community.id, community.name);
+      return null;
+    } else {
+      // Lazy load ResidentManager to avoid circular imports
+      const ResidentManager = require('./ResidentManager').default;
+      return <ResidentManager communityId={community.id} communityName={community.name} onShowResidentDetails={() => {}} />;
+    }
+  }
 
   return (
     <div>
@@ -62,6 +77,9 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack }) => {
           </Row>
         </Card.Body>
       </Card>
+      <Button variant="primary" className="mb-3" onClick={() => setShowResidents(true)}>
+        View Residents
+      </Button>
       <UnitManager communityId={community.id} />
     </div>
   );

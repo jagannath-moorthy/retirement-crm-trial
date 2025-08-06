@@ -6,6 +6,8 @@ import CommunityManager from './components/CommunityManager';
 import ClientManager from './components/ClientManager';
 import ClientDetails from './components/ClientDetails';
 import CommunityDetails from './components/CommunityDetails';
+import ResidentManager from './components/ResidentManager';
+import ResidentDetails from './components/ResidentDetails';
 
 
 import { useState } from 'react';
@@ -14,6 +16,9 @@ function App() {
   const [view, setView] = useState('home');
   const [clientDetailsId, setClientDetailsId] = useState<string | null>(null);
   const [communityDetailsId, setCommunityDetailsId] = useState<string | null>(null);
+  const [residentPageCommunityId, setResidentPageCommunityId] = useState<string | null>(null);
+  const [residentPageCommunityName, setResidentPageCommunityName] = useState<string | null>(null);
+  const [residentDetailsId, setResidentDetailsId] = useState<string | null>(null);
 
   // Simple menu handler for demo; in a real app, use React Router
   const handleNav = (key: string) => {
@@ -33,6 +38,19 @@ function App() {
     setView('communitydetails');
   };
 
+  // Handler to show resident manager page for a community
+  const handleShowResidentManager = (communityId: string, communityName: string) => {
+    setResidentPageCommunityId(communityId);
+    setResidentPageCommunityName(communityName);
+    setView('residentmanager');
+  };
+
+  // Handler to show resident details page
+  const handleShowResidentDetails = (residentId: string) => {
+    setResidentDetailsId(residentId);
+    setView('residentdetails');
+  };
+
   return (
     <>
       <Navigation />
@@ -49,7 +67,11 @@ function App() {
         ) : view === 'clientdetails' && clientDetailsId ? (
           <ClientDetails id={clientDetailsId} onBack={() => handleNav('client')} onShowCommunityDetails={handleShowCommunityDetails} />
         ) : view === 'communitydetails' && communityDetailsId ? (
-          <CommunityDetails id={communityDetailsId} onBack={() => handleNav('clientdetails')} />
+          <CommunityDetails id={communityDetailsId} onBack={() => handleNav('clientdetails')} onShowResidents={handleShowResidentManager} />
+        ) : view === 'residentmanager' && residentPageCommunityId && residentPageCommunityName ? (
+          <ResidentManager communityId={residentPageCommunityId} communityName={residentPageCommunityName} onShowResidentDetails={handleShowResidentDetails} />
+        ) : view === 'residentdetails' && residentDetailsId ? (
+          <ResidentDetails id={residentDetailsId} onBack={() => handleShowResidentManager(residentPageCommunityId!, residentPageCommunityName!)} />
         ) : (
           <>
             <h2>Welcome to the Retirement Community CRM</h2>
