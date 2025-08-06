@@ -5,6 +5,7 @@ import Navigation from './components/Navigation';
 import CommunityManager from './components/CommunityManager';
 import ClientManager from './components/ClientManager';
 import ClientDetails from './components/ClientDetails';
+import CommunityDetails from './components/CommunityDetails';
 
 
 import { useState } from 'react';
@@ -12,6 +13,7 @@ import { useState } from 'react';
 function App() {
   const [view, setView] = useState('home');
   const [clientDetailsId, setClientDetailsId] = useState<string | null>(null);
+  const [communityDetailsId, setCommunityDetailsId] = useState<string | null>(null);
 
   // Simple menu handler for demo; in a real app, use React Router
   const handleNav = (key: string) => {
@@ -23,6 +25,12 @@ function App() {
   const handleShowClientDetails = (id: string) => {
     setClientDetailsId(id);
     setView('clientdetails');
+  };
+
+  // Handler to show community details page
+  const handleShowCommunityDetails = (id: string) => {
+    setCommunityDetailsId(id);
+    setView('communitydetails');
   };
 
   return (
@@ -39,7 +47,9 @@ function App() {
         ) : view === 'client' ? (
           <ClientManager onShowDetails={handleShowClientDetails} />
         ) : view === 'clientdetails' && clientDetailsId ? (
-          <ClientDetails id={clientDetailsId} onBack={() => handleNav('client')} />
+          <ClientDetails id={clientDetailsId} onBack={() => handleNav('client')} onShowCommunityDetails={handleShowCommunityDetails} />
+        ) : view === 'communitydetails' && communityDetailsId ? (
+          <CommunityDetails id={communityDetailsId} onBack={() => handleNav('clientdetails')} />
         ) : (
           <>
             <h2>Welcome to the Retirement Community CRM</h2>

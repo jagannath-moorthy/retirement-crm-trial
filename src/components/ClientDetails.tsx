@@ -5,9 +5,10 @@ import { supabase } from '../supabaseClient';
 interface ClientDetailsProps {
   id: string;
   onBack: () => void;
+  onShowCommunityDetails?: (id: string) => void;
 }
 
-const ClientDetails: React.FC<ClientDetailsProps> = ({ id, onBack }) => {
+const ClientDetails: React.FC<ClientDetailsProps> = ({ id, onBack, onShowCommunityDetails }) => {
   const [client, setClient] = useState<any>(null);
   const [communities, setCommunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +68,11 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({ id, onBack }) => {
             communities.map(comm => (
               <tr key={comm.id}>
                 <td>
-                  <Button variant="link" onClick={() => window.location.hash = `communitydetails/${comm.id}`}>{comm.name}</Button>
+                  <Button variant="link" onClick={() => {
+                    if (typeof onShowCommunityDetails === 'function') {
+                      onShowCommunityDetails(comm.id);
+                    }
+                  }}>{comm.name}</Button>
                 </td>
               </tr>
             ))
