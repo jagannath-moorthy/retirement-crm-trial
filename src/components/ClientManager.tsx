@@ -16,7 +16,11 @@ const initialForm = {
 
 const statusOptions = ['Lead', 'In Discussion', 'Confirmed', 'Active', 'Inactive'];
 
-const ClientManager: React.FC = () => {
+interface ClientManagerProps {
+  onShowDetails?: (id: string) => void;
+}
+
+const ClientManager: React.FC<ClientManagerProps> = ({ onShowDetails }) => {
   const [clients, setClients] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
@@ -181,7 +185,7 @@ const ClientManager: React.FC = () => {
               <td>{c.contact_name}</td>
               <td>{c.contact_email}</td>
               <td>
-                <Button size="sm" variant="info" className="me-2" onClick={() => setDetailsId(c.id)}>Details</Button>
+                <Button size="sm" variant="info" className="me-2" onClick={() => onShowDetails ? onShowDetails(c.id) : setDetailsId(c.id)}>Details</Button>
                 <Button size="sm" variant="secondary" onClick={() => handleShowForm(c)} className="me-2">Update</Button>
                 <Button size="sm" variant="danger" onClick={() => { setShowDelete(true); setDeleteId(c.id); }}>Delete</Button>
               </td>
