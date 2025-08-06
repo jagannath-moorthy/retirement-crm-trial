@@ -12,11 +12,35 @@ interface ResidentForm {
   first_name: string;
   last_name: string;
   preferred_name: string;
+  prefix: string;
+  suffix: string;
   date_of_birth: string;
   gender: string;
+  nationality: string;
+  marital_status: string;
+  spouse_name: string;
+  spouse_contact_number: string;
+  identity_document_type: string;
+  identity_document_number: string;
+  identity_document_expiry: string;
   primary_phone: string;
+  alternate_phone: string;
   primary_email: string;
+  permanent_address_line1: string;
+  permanent_address_line2: string;
+  permanent_address_city: string;
+  permanent_address_country_subdivision: string;
+  permanent_address_postal_code: string;
+  blood_group: string;
+  primary_physician_name: string;
+  primary_physician_contact: string;
+  emergency_contact_name: string;
+  emergency_contact_phone: string;
+  emergency_contact_relationship: string;
   status: string;
+  start_date: string;
+  end_date: string;
+  notes: string;
   photo_blob: Blob | string | null;
 }
 
@@ -24,11 +48,35 @@ const initialForm: ResidentForm = {
   first_name: '',
   last_name: '',
   preferred_name: '',
+  prefix: '',
+  suffix: '',
   date_of_birth: '',
   gender: '',
+  nationality: '',
+  marital_status: '',
+  spouse_name: '',
+  spouse_contact_number: '',
+  identity_document_type: '',
+  identity_document_number: '',
+  identity_document_expiry: '',
   primary_phone: '',
+  alternate_phone: '',
   primary_email: '',
+  permanent_address_line1: '',
+  permanent_address_line2: '',
+  permanent_address_city: '',
+  permanent_address_country_subdivision: '',
+  permanent_address_postal_code: '',
+  blood_group: '',
+  primary_physician_name: '',
+  primary_physician_contact: '',
+  emergency_contact_name: '',
+  emergency_contact_phone: '',
+  emergency_contact_relationship: '',
   status: 'Active',
+  start_date: '',
+  end_date: '',
+  notes: '',
   photo_blob: null,
 };
 
@@ -203,40 +251,38 @@ const ResidentManager: React.FC<ResidentManagerProps> = ({ communityId, communit
                 <Form.Control type="file" accept="image/*" onChange={handlePhotoChange} />
                 {photoPreview && <Image src={photoPreview} rounded width={96} height={96} className="mt-2" />}
               </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control name="first_name" value={form.first_name} onChange={handleChange} required />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control name="last_name" value={form.last_name} onChange={handleChange} required />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Preferred Name</Form.Label>
-                <Form.Control name="preferred_name" value={form.preferred_name} onChange={handleChange} />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Date of Birth</Form.Label>
-                <Form.Control name="date_of_birth" value={form.date_of_birth} onChange={handleChange} type="date" />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Gender</Form.Label>
-                <Form.Control name="gender" value={form.gender} onChange={handleChange} />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Primary Phone</Form.Label>
-                <Form.Control name="primary_phone" value={form.primary_phone} onChange={handleChange} />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Primary Email</Form.Label>
-                <Form.Control name="primary_email" value={form.primary_email} onChange={handleChange} type="email" />
-              </Col>
-              <Col md={4} className="mb-2">
-                <Form.Label>Status</Form.Label>
-                <Form.Select name="status" value={form.status} onChange={handleChange} required>
-                  {statusOptions.map(opt => <option key={opt}>{opt}</option>)}
-                </Form.Select>
-              </Col>
+              <Col md={4} className="mb-2"><Form.Label>First Name</Form.Label><Form.Control name="first_name" value={form.first_name} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Last Name</Form.Label><Form.Control name="last_name" value={form.last_name} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Preferred Name</Form.Label><Form.Control name="preferred_name" value={form.preferred_name} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Prefix</Form.Label><Form.Control name="prefix" value={form.prefix || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Suffix</Form.Label><Form.Control name="suffix" value={form.suffix || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Date of Birth</Form.Label><Form.Control name="date_of_birth" value={form.date_of_birth} onChange={handleChange} type="date" /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Gender</Form.Label><Form.Control name="gender" value={form.gender || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Nationality</Form.Label><Form.Control name="nationality" value={form.nationality || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Marital Status</Form.Label><Form.Control name="marital_status" value={form.marital_status || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Spouse Name</Form.Label><Form.Control name="spouse_name" value={form.spouse_name || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Spouse Contact Number</Form.Label><Form.Control name="spouse_contact_number" value={form.spouse_contact_number || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Identity Document Type</Form.Label><Form.Control name="identity_document_type" value={form.identity_document_type || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Identity Document Number</Form.Label><Form.Control name="identity_document_number" value={form.identity_document_number || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Identity Document Expiry</Form.Label><Form.Control name="identity_document_expiry" value={form.identity_document_expiry || ''} onChange={handleChange} type="date" /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Primary Phone</Form.Label><Form.Control name="primary_phone" value={form.primary_phone || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Alternate Phone</Form.Label><Form.Control name="alternate_phone" value={form.alternate_phone || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Primary Email</Form.Label><Form.Control name="primary_email" value={form.primary_email || ''} onChange={handleChange} type="email" /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Permanent Address Line 1</Form.Label><Form.Control name="permanent_address_line1" value={form.permanent_address_line1 || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Permanent Address Line 2</Form.Label><Form.Control name="permanent_address_line2" value={form.permanent_address_line2 || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Permanent Address City</Form.Label><Form.Control name="permanent_address_city" value={form.permanent_address_city || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Permanent Address Country Subdivision</Form.Label><Form.Control name="permanent_address_country_subdivision" value={form.permanent_address_country_subdivision || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Permanent Address Postal Code</Form.Label><Form.Control name="permanent_address_postal_code" value={form.permanent_address_postal_code || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Blood Group</Form.Label><Form.Control name="blood_group" value={form.blood_group || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Primary Physician Name</Form.Label><Form.Control name="primary_physician_name" value={form.primary_physician_name || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Primary Physician Contact</Form.Label><Form.Control name="primary_physician_contact" value={form.primary_physician_contact || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Emergency Contact Name</Form.Label><Form.Control name="emergency_contact_name" value={form.emergency_contact_name || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Emergency Contact Phone</Form.Label><Form.Control name="emergency_contact_phone" value={form.emergency_contact_phone || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Emergency Contact Relationship</Form.Label><Form.Control name="emergency_contact_relationship" value={form.emergency_contact_relationship || ''} onChange={handleChange} /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Status</Form.Label><Form.Select name="status" value={form.status} onChange={handleChange} required>{statusOptions.map(opt => <option key={opt}>{opt}</option>)}</Form.Select></Col>
+              <Col md={4} className="mb-2"><Form.Label>Start Date</Form.Label><Form.Control name="start_date" value={form.start_date || ''} onChange={handleChange} type="date" /></Col>
+              <Col md={4} className="mb-2"><Form.Label>End Date</Form.Label><Form.Control name="end_date" value={form.end_date || ''} onChange={handleChange} type="date" /></Col>
+              <Col md={4} className="mb-2"><Form.Label>Notes</Form.Label><Form.Control name="notes" value={form.notes || ''} onChange={handleChange} as="textarea" rows={2} /> </Col>
             </Row>
           </Modal.Body>
           <Modal.Footer>
