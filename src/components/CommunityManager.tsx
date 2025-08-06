@@ -20,6 +20,7 @@ const initialForm = {
   contact_phone: '',
   logo_url: '',
   onboarding_date: '',
+  client_id: '',
 };
 
 const statusOptions = ['Active', 'Inactive'];
@@ -27,6 +28,7 @@ const onboardingOptions = ['Setup Required', 'Data Import', 'Staff Training', 'L
 
 const CommunityManager: React.FC = () => {
   const [communities, setCommunities] = useState<any[]>([]);
+  const [clients, setClients] = useState<any[]>([]);
   const [detailsId, setDetailsId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
@@ -44,8 +46,14 @@ const CommunityManager: React.FC = () => {
     setLoading(false);
   };
 
+  const fetchClients = async () => {
+    const { data, error } = await supabase.from('client').select('id, name').order('name');
+    if (!error) setClients(data || []);
+  };
+
   useEffect(() => {
     fetchCommunities();
+    fetchClients();
   }, []);
 
   const handleShowForm = (community?: any) => {
@@ -148,6 +156,21 @@ const CommunityManager: React.FC = () => {
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <Row>
+              <Col md={12} className="mb-3">
+                <Form.Label><strong>Client</strong></Form.Label>
+                <Form.Select name="client_id" value={form.client_id || ''} onChange={handleChange} required aria-label="Select client">
+                  <option value="">Select a client</option>
+                  {clients.length === 0 ? (
+                    <option value="" disabled>No clients available</option>
+                  ) : (
+                    clients.map(client => (
+                      <option key={client.id} value={client.id}>{client.name}</option>
+                    ))
+                  )}
+                </Form.Select>
+                <Form.Text className="text-muted">Choose the organization this community belongs to.</Form.Text>
+              </Col>
+              {/* ...existing code... */}
               <Col md={12} className="mb-2">
                 <Form.Label>Name</Form.Label>
                 <Form.Control name="name" value={form.name} onChange={handleChange} required />
