@@ -55,10 +55,11 @@ const UnitDetails: React.FC<UnitDetailsProps> = ({ id, onBack }) => {
       setAddLoading(false);
       return;
     }
-    // Get all assigned resident ids
+    // Get all assigned resident ids for this community only
     const { data: assigned, error: assignError } = await supabase
       .from('unit_resident')
       .select('resident_id')
+      .eq('community_id', unit.community_id)
       .in('resident_id', allResidents.map((r: any) => r.id));
     const assignedIds = assignError ? [] : (assigned || []).map((ur: any) => ur.resident_id);
     // Filter out assigned
@@ -73,6 +74,7 @@ const UnitDetails: React.FC<UnitDetailsProps> = ({ id, onBack }) => {
     const payload = {
       unit_id: id,
       resident_id: residentId,
+      community_id: unit.community_id,
       relationship_to_unit: 'Primary Resident',
       is_primary: true,
       status: 'Active'
