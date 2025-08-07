@@ -44,7 +44,7 @@ const UnitDetails: React.FC<UnitDetailsProps> = ({ id, onBack }) => {
   }, [id]);
 
   // Fetch residents in the community not assigned to any unit
-  const fetchAvailableResidents = async (communityId: string) => {
+  const fetchAvailableResidents = async () => {
     setAddLoading(true);
     // Get all residents for the community
     const { data: allResidents, error: resError } = await supabase
@@ -142,7 +142,7 @@ const UnitDetails: React.FC<UnitDetailsProps> = ({ id, onBack }) => {
           )}
         </tbody>
       </Table>
-      <Button variant="primary" className="mb-3" onClick={() => { setShowAddModal(true); fetchAvailableResidents(unit.community_id); }}>
+      <Button variant="primary" className="mb-3" onClick={() => { setShowAddModal(true); fetchAvailableResidents(); }}>
         Add Resident
       </Button>
       {/* Add Resident Modal */}
