@@ -4,6 +4,7 @@ import { Button, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../supabaseClient';
 import UnitManager from './UnitManager';
 import ResidentManager from './ResidentManager';
+import UnitDetails from './UnitDetails';
 // ...existing code...
 
 interface CommunityDetailsProps {
@@ -14,6 +15,7 @@ interface CommunityDetailsProps {
 
 const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowResidents }) => {
   const [showResidents, setShowResidents] = useState(false);
+  const [unitDetailsId, setUnitDetailsId] = useState<string | null>(null);
   // ...existing code...
   const [community, setCommunity] = useState<any>(null);
   // const [units, setUnits] = useState<any[]>([]); // For future unit UI
@@ -49,6 +51,10 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowR
     }
   }
 
+  if (unitDetailsId) {
+    return <UnitDetails id={unitDetailsId} onBack={() => setUnitDetailsId(null)} />;
+  }
+
   return (
     <div>
       <Button variant="secondary" className="mb-3" onClick={onBack}>&larr; Back to List</Button>
@@ -79,7 +85,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowR
       <Button variant="primary" className="mb-3" onClick={() => setShowResidents(true)}>
         View Residents
       </Button>
-      <UnitManager communityId={community.id} />
+      <UnitManager communityId={community.id} onShowUnitDetails={setUnitDetailsId} />
     </div>
   );
 };

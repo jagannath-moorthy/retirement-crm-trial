@@ -22,9 +22,10 @@ const statusOptions = ['Available', 'Occupied', 'Reserved', 'Maintenance', 'Unav
 
 interface UnitManagerProps {
   communityId: string;
+  onShowUnitDetails?: (unitId: string) => void;
 }
 
-const UnitManager: React.FC<UnitManagerProps> = ({ communityId }) => {
+const UnitManager: React.FC<UnitManagerProps> = ({ communityId, onShowUnitDetails }) => {
   const [units, setUnits] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
@@ -33,7 +34,7 @@ const UnitManager: React.FC<UnitManagerProps> = ({ communityId }) => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [detailsId, setDetailsId] = useState<string | null>(null);
+  // Remove detailsId, navigation will be handled by parent
 
   const fetchUnits = async () => {
     setLoading(true);
@@ -100,26 +101,7 @@ const UnitManager: React.FC<UnitManagerProps> = ({ communityId }) => {
     setLoading(false);
   };
 
-  // Details modal for now just shows all fields
-  const UnitDetailsModal = ({ unit, onHide }: { unit: any, onHide: () => void }) => (
-    <Modal show={!!unit} onHide={onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title>Unit Details</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {unit && (
-          <div>
-            {Object.entries(unit).map(([k, v]) => (
-              <div key={k}><strong>{k}:</strong> {String(v)}</div>
-            ))}
-          </div>
-        )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
+  // Details modal removed; navigation now handled by parent
 
   return (
     <div>
@@ -145,7 +127,9 @@ const UnitManager: React.FC<UnitManagerProps> = ({ communityId }) => {
               <td>{u.unit_type}</td>
               <td>{u.status}</td>
               <td>
-                <Button size="sm" variant="info" className="me-2" onClick={() => setDetailsId(u.id)}>Details</Button>
+                <Button size="sm" variant="info" className="me-2" onClick={() => {
+                  if (typeof onShowUnitDetails === 'function') onShowUnitDetails(u.id);
+                }}>Details</Button>
                 <Button size="sm" variant="secondary" onClick={() => handleShowForm(u)} className="me-2">Update</Button>
                 <Button size="sm" variant="danger" onClick={() => { setShowDelete(true); setDeleteId(u.id); }}>Delete</Button>
               </td>
@@ -244,8 +228,7 @@ const UnitManager: React.FC<UnitManagerProps> = ({ communityId }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Details Modal */}
-      <UnitDetailsModal unit={units.find(u => u.id === detailsId)} onHide={() => setDetailsId(null)} />
+      {/* Details Modal removed; navigation now handled by parent */}
     </div>
   );
 };
