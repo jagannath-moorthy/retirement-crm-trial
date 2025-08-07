@@ -53,10 +53,10 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowR
     }
   }
 
-  if (unitDetailsId) {
   if (showStaff) {
     return <StaffManager communityId={community.id} />;
   }
+  if (unitDetailsId) {
     return <UnitDetails id={unitDetailsId} onBack={() => setUnitDetailsId(null)} />;
   }
 
