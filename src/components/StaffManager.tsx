@@ -6,19 +6,38 @@ interface StaffManagerProps {
   communityId: string;
 }
 
-const initialForm = {
+interface StaffForm {
+  first_name: string;
+  last_name: string;
+  preferred_name: string;
+  date_of_birth: string | null;
+  gender: string;
+  nationality: string;
+  job_title: string;
+  department: string;
+  employment_type: string;
+  status: string;
+  hire_date: string | null;
+  end_date: string | null;
+  primary_phone: string;
+  primary_email: string;
+  notes: string;
+  photo_blob: any;
+}
+
+const initialForm: StaffForm = {
   first_name: '',
   last_name: '',
   preferred_name: '',
-  date_of_birth: '',
+  date_of_birth: null,
   gender: '',
   nationality: '',
   job_title: '',
   department: '',
   employment_type: 'Full-time',
   status: 'Active',
-  hire_date: '',
-  end_date: '',
+  hire_date: null,
+  end_date: null,
   primary_phone: '',
   primary_email: '',
   notes: '',
@@ -78,16 +97,27 @@ const StaffManager: React.FC<StaffManagerProps> = ({ communityId }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    // Convert empty date strings to null
     const payload = { ...form, community_id: communityId };
+    if (payload.date_of_birth === '') payload.date_of_birth = null;
+    if (payload.hire_date === '') payload.hire_date = null;
+    if (payload.end_date === '') payload.end_date = null;
     if (editingId) {
       // Prevent hire_date update
       if ('hire_date' in payload) {
         delete (payload as any).hire_date;
       }
-      const { error } = await supabase.from('staff').update(payload).eq('id', editingId);
+      const updatePayload = { ...payload };
+      if (updatePayload.date_of_birth === '') updatePayload.date_of_birth = null;
+      if (updatePayload.end_date === '') updatePayload.end_date = null;
+      const { error } = await supabase.from('staff').update(updatePayload).eq('id', editingId);
       if (error) setError(error.message);
     } else {
-      const { error } = await supabase.from('staff').insert([payload]);
+      const insertPayload = { ...payload };
+      if (insertPayload.date_of_birth === '') insertPayload.date_of_birth = null;
+      if (insertPayload.hire_date === '') insertPayload.hire_date = null;
+      if (insertPayload.end_date === '') insertPayload.end_date = null;
+      const { error } = await supabase.from('staff').insert([insertPayload]);
       if (error) setError(error.message);
     }
     setShowForm(false);
@@ -180,7 +210,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ communityId }) => {
               </Col>
               <Col md={6} className="mb-2">
                 <Form.Label>Date of Birth</Form.Label>
-                <Form.Control name="date_of_birth" value={form.date_of_birth} onChange={handleChange} type="date" />
+                <Form.Control name="date_of_birth" value={form.date_of_birth || ''} onChange={handleChange} type="date" />
               </Col>
               <Col md={6} className="mb-2">
                 <Form.Label>Gender</Form.Label>
@@ -212,11 +242,11 @@ const StaffManager: React.FC<StaffManagerProps> = ({ communityId }) => {
               </Col>
               <Col md={6} className="mb-2">
                 <Form.Label>Hire Date</Form.Label>
-                <Form.Control name="hire_date" value={form.hire_date} onChange={handleChange} type="date" required disabled={!!editingId} />
+                <Form.Control name="hire_date" value={form.hire_date || ''} onChange={handleChange} type="date" required disabled={!!editingId} />
               </Col>
               <Col md={6} className="mb-2">
                 <Form.Label>End Date</Form.Label>
-                <Form.Control name="end_date" value={form.end_date} onChange={handleChange} type="date" disabled />
+                <Form.Control name="end_date" value={form.end_date || ''} onChange={handleChange} type="date" disabled />
               </Col>
               <Col md={6} className="mb-2">
                 <Form.Label>Primary Phone</Form.Label>
