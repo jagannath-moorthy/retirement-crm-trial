@@ -5,6 +5,7 @@ import { supabase } from '../supabaseClient';
 import UnitManager from './UnitManager';
 import ResidentManager from './ResidentManager';
 import UnitDetails from './UnitDetails';
+import StaffManager from './StaffManager';
 // ...existing code...
 
 interface CommunityDetailsProps {
@@ -15,6 +16,7 @@ interface CommunityDetailsProps {
 
 const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowResidents }) => {
   const [showResidents, setShowResidents] = useState(false);
+  const [showStaff, setShowStaff] = useState(false);
   const [unitDetailsId, setUnitDetailsId] = useState<string | null>(null);
   // ...existing code...
   const [community, setCommunity] = useState<any>(null);
@@ -52,6 +54,9 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowR
   }
 
   if (unitDetailsId) {
+  if (showStaff) {
+    return <StaffManager communityId={community.id} />;
+  }
     return <UnitDetails id={unitDetailsId} onBack={() => setUnitDetailsId(null)} />;
   }
 
@@ -82,8 +87,11 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({ id, onBack, onShowR
           </Row>
         </Card.Body>
       </Card>
-      <Button variant="primary" className="mb-3" onClick={() => setShowResidents(true)}>
+      <Button variant="primary" className="me-2 mb-3" onClick={() => setShowResidents(true)}>
         View Residents
+      </Button>
+      <Button variant="info" className="mb-3" onClick={() => setShowStaff(true)}>
+        View Staff
       </Button>
       <UnitManager communityId={community.id} onShowUnitDetails={setUnitDetailsId} />
     </div>
