@@ -70,9 +70,11 @@ const UnitDetails: React.FC<UnitDetailsProps> = ({ id, onBack }) => {
   // Add resident to unit
   const handleAddResident = async (residentId: string) => {
     setAddLoading(true);
-    await supabase.from('unit_resident').insert({ unit_id: id, resident_id: residentId });
-    setShowAddModal(false);
-    await fetchUnitResidents();
+    const { error } = await supabase.from('unit_resident').insert([{ unit_id: id, resident_id: residentId }]);
+    if (!error) {
+      setShowAddModal(false);
+      await fetchUnitResidents();
+    }
     setAddLoading(false);
   };
 
